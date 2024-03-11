@@ -7,7 +7,7 @@ the user to selct the tool they want to use.
 Author: Grant Adams
 """
 
-import network_tool as nt
+import encryption_tool as et
 import web_scraper as ws
 
 
@@ -38,8 +38,8 @@ def main_menu():
 
         match user_choice:
             case "1":
-                heading("Port Scanner", 60)
-                nt.Network_tool()
+                heading("Encryption tool", 60)
+                et.Encryption_tool()
             case "2":
                 heading("Web Scraper", 60)
                 ws.Web_scrape()
