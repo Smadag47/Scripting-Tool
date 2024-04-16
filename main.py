@@ -31,7 +31,7 @@ def main_menu():
     while True:
 
         heading("Welcome to the program", 60)
-        print("1. Port Scanner")
+        print("1. Encryption Tool")
         print("2. Web Scraper")
         print("3. Exit Program")
         user_choice = input("\nSelect your choice > ")
