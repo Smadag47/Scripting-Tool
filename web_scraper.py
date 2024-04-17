@@ -1,3 +1,6 @@
+import nmap
+
+
 class Web_scrape:
     """
     A class containing all the methods needed for a web scraper.
