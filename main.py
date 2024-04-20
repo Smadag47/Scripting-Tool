@@ -6,50 +6,86 @@ the user to selct the tool they want to use.
 
 Author: Grant Adams
 """
+# Try to import required modules and install them if they arent already
+try:
+    import inquirer
+    from pyfiglet import Figlet
+    from installer import install_package
+    from encryption_tool import Encryption_tool
+    # from web_scraper import Web_scrape
+except ModuleNotFoundError:
+    install_package()
 
-import encryption_tool as et
-import web_scraper as ws
 
+def heading(title):
+    """Display a heading using ASCII art
 
-def heading(title, line_length):
-    """Display a heading and automatically center the title
-
-    Arguments:
+    Args:
         title (str): The title that will be displayed in header
-        line_length (int): the desired length of the line
     """
-
-    divider_lines = "*" * line_length
-    padding = " " * ((line_length - len(title)) // 2)
-    centered_title = padding + title + padding
-    print(f"\n{divider_lines}\n{centered_title}\n{divider_lines}\n")
+    f = Figlet(font='slant')
+    print(f.renderText(title))
 
 
 def main_menu():
-    """Display the program main menu, and allow user to select a tool"""
-
     while True:
+        heading("Welcome")
 
-        heading("Welcome to the program", 60)
-        print("1. Encryption Tool")
-        print("2. Web Scraper")
-        print("3. Exit Program")
-        user_choice = input("\nSelect your choice > ")
+        # Display a menu to select a tool
+        menu = inquirer.prompt([
+            inquirer.List(
+                'choice',
+                message="Please select a tool",
+                choices=[
+                    "Encryption Tool", 
+                    "Network Scan Report", 
+                    "Exit"])
+        ])
+        user_choice = menu["choice"]
 
+        # Run the tool based on user's choice
         match user_choice:
-            case "1":
-                heading("Encryption tool", 60)
-                et.Encryption_tool()
-            case "2":
-                heading("Web Scraper", 60)
-                ws.Web_scrape()
-            case "3":
+            case "Encryption Tool":
+                encryption_menu()
+            case "Network Scan Report":
+                heading("Web Scraper")
+                # Web_scrape()
+            case "Exit":
                 print("\nGOODBYE!!!\n")
-                break
+                exit()
             case _:
                 continue
 
-    input("Press Enter to exit\n")
+
+def encryption_menu():
+    encryption_tool = Encryption_tool()
+    while True:
+
+        heading("Encryption tool")
+
+        encryption_tool_menu = inquirer.prompt([
+            inquirer.List(
+                'choice',
+                message="Please select a function",
+                choices=[
+                    "Create Key",
+                    "Encrypt File",
+                    "Decrypt File", 
+                    "Back"])
+        ])
+        user_choice = encryption_tool_menu["choice"]
+
+        match user_choice:
+            case "Create Key":
+                encryption_tool.create_new_key()
+            case "Encrypt File":
+                encryption_tool.encrypt_file()
+            case "Decrypt File":
+                encryption_tool.decrypt_file()
+            case "Back":
+                main_menu()
+            case _:
+                exit()
 
 
 def main():
