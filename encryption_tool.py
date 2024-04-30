@@ -41,7 +41,7 @@ class Encryption_tool:
         files = [
             file for file in file_list
             if os.path.isfile(file)
-            and file.endswith(".txt")
+            and not file.endswith(".py")
             and file != "key.txt"
         ]
 

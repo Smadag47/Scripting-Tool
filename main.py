@@ -6,7 +6,7 @@ the user to selct the tool they want to use.
 
 Author: Grant Adams
 """
-# Try to import required modules and install them if they arent already
+# Try to import required modules and install them if they aren't already
 try:
     import inquirer
     from pyfiglet import Figlet

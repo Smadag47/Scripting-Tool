@@ -3,7 +3,11 @@ import importlib
 
 
 def install_package():
-    packages = ["cryptography", "curses", "inquirer", "pyfiglet"]
+    packages = [
+        "cryptography",
+        "inquirer",
+        "pyfiglet"
+    ]
 
     x = input("would you like to install required modules? (Y/n)")
 
@@ -14,7 +18,8 @@ def install_package():
                 print(f"{package} is already installed.")
             except ImportError:
                 print(f"{package} is not installed. Installing...")
-                subprocess.run(["sudo", "apt", "install", f"python3-{package}"])
+                subprocess.run(
+                    ["sudo", "apt", "install", f"python3-{package}"])
 
     else:
         print("Program could not be ran")
