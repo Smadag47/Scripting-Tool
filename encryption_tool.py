@@ -1,11 +1,11 @@
 # Try to import required modules and install them if they arent already
 try:
     import os
-    from installer import install_package
     from cryptography.fernet import Fernet
     import inquirer
 except ModuleNotFoundError as e:
-    install_package()
+    print("Please install the required modules, and try again")
+    exit()
 
 
 class Encryption_tool:
@@ -43,16 +43,28 @@ class Encryption_tool:
             if os.path.isfile(file)
             and not file.endswith(".py")
             and file != "key.txt"
+            and file != "requirements.txt"
         ]
+
+        choices = files + ["Back"]
 
         # Display a menu to select a file
         menu = inquirer.prompt([
             inquirer.List(
                 'choice',
                 message="Please select a file",
-                choices=files)
+                choices=choices)
         ])
+
+        # Exit the program gracefully if no option is given
+        if menu is None:
+            print("Goodbye!")
+            exit()
+
         user_choice = menu["choice"]
+
+        if user_choice == "Back":
+            return None
 
         return user_choice
 
@@ -86,6 +98,9 @@ class Encryption_tool:
         '''Encrypts the selected file using the encryption key'''
         file = self.select_file()
 
+        if file is None:
+            return
+
         # Try to open the file to be encrypted
         try:
             with open(file, "rb") as file:
@@ -106,6 +121,10 @@ class Encryption_tool:
     def decrypt_file(self):
         '''Decrypts the selected file using the encryption key'''
         file = self.select_file()
+
+        # Exit menu if no file is selected
+        if file is None:
+            return
 
         try:
             # Open the file to be decrypted

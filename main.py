@@ -6,15 +6,16 @@ the user to selct the tool they want to use.
 
 Author: Grant Adams
 """
-# Try to import required modules and install them if they aren't already
+
+# Try to import required modules
 try:
     import inquirer
     from pyfiglet import Figlet
-    from installer import install_package
     from encryption_tool import Encryption_tool
-    # from web_scraper import Web_scrape
+    from network_scan import Network_Scanner
 except ModuleNotFoundError:
-    install_package()
+    print("Please install the required modules, and try again")
+    exit()
 
 
 def heading(title):
@@ -23,33 +24,52 @@ def heading(title):
     Args:
         title (str): The title that will be displayed in header
     """
-    f = Figlet(font='slant')
+    f = Figlet(font="slant")
     print(f.renderText(title))
 
 
+def display_menu(*options):
+    """Displays a menu with the given options and returns the user's choice.
+
+    Args:
+        *options: Variable number of options to be displayed in the menu.
+
+    Returns:
+        The user's choice as a string.
+    """
+    menu = inquirer.prompt(
+        [inquirer.List("choice", message="Please select a tool",
+                       choices=options)]
+    )
+
+    # Exit the program gracefully if no option is selected
+    if menu is None:
+        print("Goodbye!")
+        exit()
+
+    user_choice = menu["choice"]
+
+    return user_choice
+
+
 def main_menu():
+    """ Displays the main menu and allows the user to select a tool."""
     while True:
         heading("Welcome")
 
         # Display a menu to select a tool
-        menu = inquirer.prompt([
-            inquirer.List(
-                'choice',
-                message="Please select a tool",
-                choices=[
-                    "Encryption Tool", 
-                    "Network Scan Report", 
-                    "Exit"])
-        ])
-        user_choice = menu["choice"]
+        user_choice = display_menu(
+            "Encryption Tool",
+            "Network Scan Report",
+            "Exit"
+        )
 
         # Run the tool based on user's choice
         match user_choice:
             case "Encryption Tool":
                 encryption_menu()
             case "Network Scan Report":
-                heading("Web Scraper")
-                # Web_scrape()
+                network_scan_menu()
             case "Exit":
                 print("\nGOODBYE!!!\n")
                 exit()
@@ -58,23 +78,19 @@ def main_menu():
 
 
 def encryption_menu():
+    """Displays the encryption tool menu and performs the selected action."""
     encryption_tool = Encryption_tool()
     while True:
-
         heading("Encryption tool")
 
-        encryption_tool_menu = inquirer.prompt([
-            inquirer.List(
-                'choice',
-                message="Please select a function",
-                choices=[
-                    "Create Key",
-                    "Encrypt File",
-                    "Decrypt File", 
-                    "Back"])
-        ])
-        user_choice = encryption_tool_menu["choice"]
+        # Display a menu to select an option
+        user_choice = display_menu(
+            "Create Key",
+            "Encrypt File",
+            "Decrypt File",
+            "Back")
 
+        # Carry out the chosen function
         match user_choice:
             case "Create Key":
                 encryption_tool.create_new_key()
@@ -86,6 +102,16 @@ def encryption_menu():
                 main_menu()
             case _:
                 exit()
+
+
+def network_scan_menu():
+    """Displays the network scan menu and performs the selected action."""
+    scanner = Network_Scanner()
+    heading("Network Scanner")
+    subnet_id = input("Enter a subnet to scan: ")
+    hosts = scanner.host_discovery(subnet_id)
+    scan_results = scanner.service_scan(hosts)
+    scanner.generate_report(scan_results)
 
 
 def main():
